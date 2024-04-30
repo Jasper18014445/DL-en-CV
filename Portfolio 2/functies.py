@@ -10,12 +10,12 @@ from datetime import datetime
 
 def preditions_to_classes(y_pred, label_names):
     label_map = {i: class_name for i, class_name in enumerate(label_names)}
-    predicted_classes = np.argmax(y_pred, axis=1)
+    predicted_classes = np.argmax(y_pred.logits, axis=1)
     predictions = np.array([label_map[i] for i in predicted_classes])
     return predictions
 
 
-def kaggle_csv(model, input_, suffix):
+def kaggle_csv(model, input_, label_names, suffix):
     """
     Deze functie maakt de voorspelling op de test dataset
     en vormt deze om tot een csv bestand om in te kunnen
@@ -45,7 +45,7 @@ def kaggle_csv(model, input_, suffix):
     y_pred = model.predict(input_)
 
     # Voorspelling omzetten van kans naar genre
-    classes = preditions_to_classes(y_pred)
+    classes = preditions_to_classes(y_pred, label_names)
 
     # Aanmaken df met alleen filename en genre
     test_predictions_df = pd.DataFrame(
